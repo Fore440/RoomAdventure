@@ -1,3 +1,10 @@
+/*
+Aaron Fore:
+Austin Brown:
+Sammy Mai:
+Antonio Hernandez:
+*/
+
 import java.util.Scanner; // Import Scanner for reading a user import
 
 
