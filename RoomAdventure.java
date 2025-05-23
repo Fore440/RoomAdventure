@@ -1,8 +1,6 @@
 /*
-Aaron Fore:
-Austin Brown:
-Sammy Mai:
-Antonio Hernandez:
+Aaron Fore: added rooms 3, 4, and 5, added use command, added apple. using apple does nothing, using coal kills you, using key in room 5 with new door wins
+Used chatgpt 4o mini for the lines to exit the program (System.exit(0)) as well as general formatting help
 */
 
 import java.util.Scanner; // Import Scanner for reading a user import
@@ -18,7 +16,7 @@ public class RoomAdventure{ // Main class containing game logic
     
     // Constants
     final private static String DEFUALT_STATUS =
-        "Sorry, I do not understand. Try {verb} {noun}. Valid verbs include 'go', 'look', and 'take'"; //Defualt error message
+        "Sorry, I do not understand. Try {verb} {noun}. Valid verbs include 'go', 'look', 'take', and 'use'"; //Defualt error message
 
     private static void handleGo(String noun) { // Handles moving between rooms
         String[] exitDirections = currentRoom.getExitDirections(); // Get the available directions
@@ -60,20 +58,51 @@ public class RoomAdventure{ // Main class containing game logic
             }
         }
     }
+    
+    private static void handleUse(String noun) {
+        boolean hasItem = false;
+        for (String item : inventory) {
+            if (noun.equals(item)) {
+                hasItem = true;
+                break;
+            }
+        }
+        if (!hasItem) {
+            status = "You don't have that item.";
+            return;
+        }
+        
+        if (noun.equals("key") && currentRoom.name.equals("Room 5")) {
+            status = "You used the key to unlock the door. You win!";
+            System.out.println(status);
+            System.exit(0);
+        } else if (noun.equals("coal")) {
+            status = "You ate the coal and died.";
+            System.out.println(status);
+            System.exit(0);
+        } else if (noun.equals("apple")) {
+            status = "You eat an apple. Nothing happens.";
+        } else {
+            status = "You can't use that here.";
+        }
+    }
 
     private static void setupGame() { //init game world
         RoomAdventure adventure = new RoomAdventure(); // Create a new instance of the game
         Room room1 = adventure.new Room("Room 1"); // Create room 1
         Room room2 = adventure.new Room("Room 2"); // Create room 2
+        Room room3 = adventure.new Room("Room 3"); // Create room 3
+        Room room4 = adventure.new Room("Room 4"); // Create room 4
+        Room room5 = adventure.new Room("Room 5"); // Create room 5
         
-        String[] room1ExitDirections = {"east"}; // Exit directions for room 1
-        Room[] room1ExitDestinations = {room2}; // Exit destinations for room 1
+        // Room 1
+        String[] room1ExitDirections = {"east", "south"}; // Exit directions for room 1
+        Room[] room1ExitDestinations = {room2, room3}; // Exit destinations for room 1
         String[] room1Items = {"chair", "desk"}; // Items in room 1
         String[] room1ItemDescriptions = {
             "A wooden chair", 
             "A wooden desk"
         }; // Item descriptions for room 1
-
         String[] room1Grabbables = {"key"}; // items in room 1 you can take
         room1.setExitDirections(room1ExitDirections); // Set exit directions for room 1
         room1.setExitDestinations(room1ExitDestinations); // Set exit destinations for room 1
@@ -82,9 +111,8 @@ public class RoomAdventure{ // Main class containing game logic
         room1.setGrabbables(room1Grabbables); // Set grabbables for room 1
 
         // Room 2
-        
-        String[] room2ExitDirections = {"west"}; // Exit directions for room 2
-        Room[] room2ExitDestinations = {room1}; // Exit destinations for room 2
+        String[] room2ExitDirections = {"west", "south"}; // Exit directions for room 2
+        Room[] room2ExitDestinations = {room1, room4}; // Exit destinations for room 2
         String[] room2Items = {"fireplace", "rug"}; // Items in room 2
         String[] room2ItemDescriptions = {
             "Its on fire",
@@ -97,7 +125,42 @@ public class RoomAdventure{ // Main class containing game logic
         room2.setItemDescriptions(room2ItemDescriptions); // Set item descriptions for room 2
         room2.setGrabbables(room2Grabbables); // Set grabbables for room 2
 
-        // Set the current room to room 1
+        // Room 3
+        String[] room3ExitDirections = {"north", "east"}; // Exit directions for room 3
+        Room[] room3ExitDestinations = {room1, room4}; // Exit destinations for room 3
+        String[] room3Items = {"apple"}; // Items in room 3
+        String[] room3ItemDescriptions = {"A red apple"}; // Item descriptions for room 3
+        String[] room3Grabbables = {"apple"}; // items in room 3 you can take
+        room3.setExitDirections(room3ExitDirections); // Set exit directions for room 3
+        room3.setExitDestinations(room3ExitDestinations); // Set exit destinations for room 3
+        room3.setItems(room3Items); // Set items for room 3
+        room3.setItemDescriptions(room3ItemDescriptions); // Set item descriptions for room 3
+        room3.setGrabbables(room3Grabbables); // Set grabbables for room 3
+
+        // Room 4
+        String[] room4ExitDirections = {"north", "west", "south"}; // Exit directions for room 4
+        Room[] room4ExitDestinations = {room2, room3, room5}; // Exit destinations for room 4
+        String[] room4Items = {"table"}; // Items in room 4
+        String[] room4ItemDescriptions = {"A small table"}; // Item descriptions for room 4
+        String[] room4Grabbables = {}; // items in room 4 you can take
+        room4.setExitDirections(room4ExitDirections); // Set exit directions for room 4
+        room4.setExitDestinations(room4ExitDestinations); // Set exit destinations for room 4
+        room4.setItems(room4Items); // Set items for room 4
+        room4.setItemDescriptions(room4ItemDescriptions); // Set item descriptions for room 4
+        room4.setGrabbables(room4Grabbables); // Set grabbables for room 4
+
+        // Room 5
+        String[] room5ExitDirections = {"north"}; // Exit directions for room 5
+        Room[] room5ExitDestinations = {room4}; // Exit destinations for room 5
+        String[] room5Items = {"door"}; // Items in room 5
+        String[] room5ItemDescriptions = {"A locked door"}; // Item descriptions for room 5
+        String[] room5Grabbables = {}; // items in room 5 you can take
+        room5.setExitDirections(room5ExitDirections); // Set exit directions for room 5
+        room5.setExitDestinations(room5ExitDestinations); // Set exit destinations for room 5
+        room5.setItems(room5Items); // Set items for room 5
+        room5.setItemDescriptions(room5ItemDescriptions); // Set item descriptions for room 5
+        room5.setGrabbables(room5Grabbables); // Set grabbables for room 5
+
         currentRoom = room1; // Set the current room to room 1
     }
 
@@ -122,6 +185,7 @@ public class RoomAdventure{ // Main class containing game logic
 
             if (words.length != 2) { // Check for proper two-word command
                 status = DEFUALT_STATUS; // Set status to default error message
+                System.out.println(status);
                 continue; // Skip to the next iteration of the loop    
             }
             
@@ -138,9 +202,11 @@ public class RoomAdventure{ // Main class containing game logic
                 case "take": // if verb is take
                     handleTake(noun); // take an item
                     break;
+                case "use": // if verb is use
+                    handleUse(noun); // use an item
+                    break;
                 default: // if verb is not recognized
                     status = DEFUALT_STATUS; // Set status to default error message
-                    
             }
 
             System.out.println(status); // Print the status message
@@ -224,4 +290,3 @@ class Room{ // Represents a game room
 }
 
 }
-
